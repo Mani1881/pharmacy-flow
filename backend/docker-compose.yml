@@ -1,0 +1,87 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: pharmacy_user
+      POSTGRES_PASSWORD: pharmacy_pass
+      POSTGRES_DB: pharmacy_db
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  auth:
+    build:
+      context: ..
+      dockerfile: backend/docker/Dockerfile.service
+      args:
+        SERVICE_NAME: auth
+    environment:
+      SERVICE_PORT: 8000
+      SECRET_KEY: dev-secret
+    ports:
+      - "8000:8000"
+
+  inventory:
+    build:
+      context: ..
+      dockerfile: backend/docker/Dockerfile.service
+      args:
+        SERVICE_NAME: inventory
+    environment:
+      SERVICE_PORT: 8001
+      SECRET_KEY: dev-secret
+    ports:
+      - "8001:8001"
+
+  pos:
+    build:
+      context: ..
+      dockerfile: backend/docker/Dockerfile.service
+      args:
+        SERVICE_NAME: pos
+    environment:
+      SERVICE_PORT: 8002
+      SECRET_KEY: dev-secret
+    ports:
+      - "8002:8002"
+
+  orders:
+    build:
+      context: ..
+      dockerfile: backend/docker/Dockerfile.service
+      args:
+        SERVICE_NAME: orders
+    environment:
+      SERVICE_PORT: 8003
+      SECRET_KEY: dev-secret
+    ports:
+      - "8003:8003"
+
+  analytics:
+    build:
+      context: ..
+      dockerfile: backend/docker/Dockerfile.service
+      args:
+        SERVICE_NAME: analytics
+    environment:
+      SERVICE_PORT: 8004
+      SECRET_KEY: dev-secret
+    ports:
+      - "8004:8004"
+
+  ai:
+    build:
+      context: ..
+      dockerfile: backend/docker/Dockerfile.service
+      args:
+        SERVICE_NAME: ai
+    environment:
+      SERVICE_PORT: 8005
+      SECRET_KEY: dev-secret
+    ports:
+      - "8005:8005"
