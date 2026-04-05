@@ -1,7 +1,8 @@
 # PharmaFlow
 
 <p align="center">
-	<img src="public/pharmaflow-3d-hero.svg" alt="PharmaFlow 3D operations dashboard visual" width="100%" />
+	<img src="<img width="1366" height="683" alt="image" src="https://github.com/user-attachments/assets/00826434-3d97-4d63-b1fb-cb30b44c597b" />
+" alt="PharmaFlow 3D operations dashboard visual" width="100%" />
 </p>
 
 PharmaFlow is a pharmacy chain management platform for tracking inventory, sales, replenishment orders, outlets, audit logs, reports, and AI-assisted operational insights.
