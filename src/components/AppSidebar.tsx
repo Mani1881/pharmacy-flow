@@ -3,13 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   LayoutDashboard, Package, ShoppingCart, BarChart3, Settings, LogOut,
-  ChevronLeft, ChevronRight, Activity, Users, AlertTriangle, Brain,
+  ChevronLeft, ChevronRight, Users, AlertTriangle, Brain,
   Building2, Truck, FileText, Bell
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import pharmaLogo from "@/assets/pharmaflow-logo.png";
 
 const NAV_ITEMS = [
   { path: "/", icon: LayoutDashboard, label: "Dashboard", roles: ["super_admin", "regional_supervisor", "pharmacist", "store_assistant", "finance_user"] },
@@ -39,8 +40,8 @@ export default function AppSidebar() {
     )}>
       {/* Header */}
       <div className="p-4 flex items-center gap-3 border-b border-sidebar-border">
-        <div className="gradient-primary p-1.5 rounded-lg shrink-0">
-          <Activity className="h-5 w-5 text-primary-foreground" />
+        <div className="shrink-0 w-8 h-8 rounded-lg overflow-hidden bg-white/10 flex items-center justify-center">
+          <img src={pharmaLogo} alt="PharmaFlow" width={28} height={28} />
         </div>
         {!collapsed && <span className="text-sidebar-foreground font-bold text-lg">PharmaFlow</span>}
       </div>
