@@ -41,7 +41,7 @@ export default function LoginPage() {
         },
       });
       if (error) throw error;
-      toast({ title: "Account created!", description: "Please check your email to verify your account." });
+      toast.success("Account created! Please check your email to verify.");
     } catch (err: any) {
       toast({ title: "Signup failed", description: err.message, variant: "destructive" });
     } finally {
