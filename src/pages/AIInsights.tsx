@@ -68,7 +68,7 @@ export default function AIInsights() {
         return;
       }
       if (resp.status === 402) {
-        toast({ title: "Credits exhausted", description: "Please add AI credits to continue.", variant: "destructive" });
+        toast.error("AI credits exhausted. Please add funds to continue.");
         setIsLoading(false);
         return;
       }
