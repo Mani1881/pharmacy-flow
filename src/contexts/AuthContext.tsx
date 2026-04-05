@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import type { User, Session } from "@supabase/supabase-js";
 
 export type UserRole = "super_admin" | "regional_supervisor" | "pharmacist" | "store_assistant" | "finance_user";
 
@@ -22,35 +24,63 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// Demo users for prototype
-const DEMO_USERS: Record<string, AuthUser> = {
-  "admin@pharmaflow.com": { id: "1", email: "admin@pharmaflow.com", name: "Dr. Sarah Chen", role: "super_admin", avatar: "SC" },
-  "supervisor@pharmaflow.com": { id: "2", email: "supervisor@pharmaflow.com", name: "James Okafor", role: "regional_supervisor", regionId: "north", avatar: "JO" },
-  "pharmacist@pharmaflow.com": { id: "3", email: "pharmacist@pharmaflow.com", name: "Dr. Priya Sharma", role: "pharmacist", outletId: "outlet-1", outletName: "Downtown Pharmacy", avatar: "PS" },
-  "assistant@pharmaflow.com": { id: "4", email: "assistant@pharmaflow.com", name: "Mike Johnson", role: "store_assistant", outletId: "outlet-1", outletName: "Downtown Pharmacy", avatar: "MJ" },
-  "finance@pharmaflow.com": { id: "5", email: "finance@pharmaflow.com", name: "Linda Park", role: "finance_user", avatar: "LP" },
-};
+async function fetchProfile(userId: string, email: string): Promise<AuthUser> {
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
+
+  const name = profile?.full_name || email;
+  const role = (profile?.role as UserRole) || "store_assistant";
+  const initials = name.split(" ").map((n: string) => n[0]).join("").slice(0, 2).toUpperCase();
+
+  return {
+    id: userId,
+    email,
+    name,
+    role,
+    outletId: profile?.outlet_id || undefined,
+    outletName: profile?.outlet_name || undefined,
+    regionId: profile?.region_id || undefined,
+    avatar: initials,
+  };
+}
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem("pharmaflow_user");
-    if (saved) setUser(JSON.parse(saved));
-    setIsLoading(false);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session?.user) {
+        const profile = await fetchProfile(session.user.id, session.user.email || "");
+        setUser(profile);
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session?.user) {
+        const profile = await fetchProfile(session.user.id, session.user.email || "");
+        setUser(profile);
+      }
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, _password: string) => {
-    const demoUser = DEMO_USERS[email.toLowerCase()];
-    if (!demoUser) throw new Error("Invalid credentials. Use a demo account.");
-    setUser(demoUser);
-    localStorage.setItem("pharmaflow_user", JSON.stringify(demoUser));
+  const login = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
   };
 
-  const logout = () => {
+  const logout = async () => {
+    await supabase.auth.signOut();
     setUser(null);
-    localStorage.removeItem("pharmaflow_user");
   };
 
   return (

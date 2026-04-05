@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { PageHeader, SectionCard } from "@/components/shared/StatCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Brain, Send, Sparkles, TrendingUp, AlertTriangle, Package } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import ReactMarkdown from "react-markdown";
+
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
 const SUGGESTED_QUERIES = [
   { icon: TrendingUp, text: "Which outlets had the highest growth this quarter?" },
@@ -17,29 +21,92 @@ interface Message {
   content: string;
 }
 
-const MOCK_RESPONSES: Record<string, string> = {
-  "which outlets had the highest growth this quarter?": "📊 **Top Growing Outlets (Q2 2025)**\n\n1. **Victoria Island** — +18.4% revenue growth (₦4.8M → ₦5.7M)\n2. **Downtown Pharmacy** — +14.2% (₦6.2M → ₦7.1M)\n3. **Ikeja Mall** — +11.8% (₦5.1M → ₦5.7M)\n\n⚠️ **Underperforming:** Lekki Phase 1 showed -3.2% decline — recommend staffing review and promotional campaign.",
-  "show me products at risk of stockout this week": "🔴 **Stock-Out Risk Alert (7-day forecast)**\n\n| Product | Current Stock | Daily Avg Sales | Days Left |\n|---|---|---|---|\n| Amoxicillin 500mg | 24 units | 8.2/day | **2.9 days** |\n| Codeine Phosphate 30mg | 8 units | 2.1/day | **3.8 days** |\n| Azithromycin 250mg | 45 units | 9.5/day | **4.7 days** |\n\n✅ **Auto-reorder** has been triggered for Amoxicillin across 5 affected outlets.",
-};
-
 export default function AIInsights() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+  }, [messages]);
 
   const sendMessage = async (text: string) => {
     const userMsg: Message = { role: "user", content: text };
-    setMessages(prev => [...prev, userMsg]);
+    const allMessages = [...messages, userMsg];
+    setMessages(allMessages);
     setInput("");
     setIsLoading(true);
 
-    // Simulate AI response
-    await new Promise(r => setTimeout(r, 1500));
-    const key = Object.keys(MOCK_RESPONSES).find(k => text.toLowerCase().includes(k)) || "";
-    const response = MOCK_RESPONSES[key] || `I've analyzed your query: "${text}"\n\n📊 Based on current data across 38 outlets, here's a summary:\n- Total revenue this month: ₦38.2M (+12% MoM)\n- Average margin: 37.2%\n- 52 products need attention\n\nWould you like me to drill down into any specific area?`;
+    let assistantSoFar = "";
 
-    setMessages(prev => [...prev, { role: "assistant", content: response }]);
-    setIsLoading(false);
+    const upsertAssistant = (chunk: string) => {
+      assistantSoFar += chunk;
+      setMessages(prev => {
+        const last = prev[prev.length - 1];
+        if (last?.role === "assistant") {
+          return prev.map((m, i) => (i === prev.length - 1 ? { ...m, content: assistantSoFar } : m));
+        }
+        return [...prev, { role: "assistant", content: assistantSoFar }];
+      });
+    };
+
+    try {
+      const resp = await fetch(CHAT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ messages: allMessages }),
+      });
+
+      if (resp.status === 429) {
+        toast({ title: "Rate limited", description: "Too many requests. Please wait a moment.", variant: "destructive" });
+        setIsLoading(false);
+        return;
+      }
+      if (resp.status === 402) {
+        toast({ title: "Credits exhausted", description: "Please add AI credits to continue.", variant: "destructive" });
+        setIsLoading(false);
+        return;
+      }
+      if (!resp.ok || !resp.body) throw new Error("Failed to connect to AI");
+
+      const reader = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let textBuffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf("\n")) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+          if (line.endsWith("\r")) line = line.slice(0, -1);
+          if (line.startsWith(":") || line.trim() === "") continue;
+          if (!line.startsWith("data: ")) continue;
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === "[DONE]") break;
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) upsertAssistant(content);
+          } catch {
+            textBuffer = line + "\n" + textBuffer;
+            break;
+          }
+        }
+      }
+    } catch (err: any) {
+      toast({ title: "AI Error", description: err.message, variant: "destructive" });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -49,10 +116,9 @@ export default function AIInsights() {
       </PageHeader>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Chat */}
         <div className="lg:col-span-3">
-          <SectionCard className="min-h-[500px] flex flex-col">
-            <div className="flex-1 space-y-4 mb-4 overflow-y-auto max-h-[400px]">
+          <SectionCard className="min-h-[500px] flex flex-col glass-card-3d">
+            <div ref={scrollRef} className="flex-1 space-y-4 mb-4 overflow-y-auto max-h-[400px]">
               {messages.length === 0 && (
                 <div className="text-center py-12">
                   <Brain className="h-12 w-12 mx-auto text-primary/30 mb-3" />
@@ -62,14 +128,18 @@ export default function AIInsights() {
               )}
               {messages.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[80%] rounded-xl px-4 py-3 text-sm whitespace-pre-wrap ${
-                    msg.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"
+                  <div className={`max-w-[80%] rounded-xl px-4 py-3 text-sm ${
+                    msg.role === "user" ? "gradient-primary text-primary-foreground" : "bg-muted"
                   }`}>
-                    {msg.content}
+                    {msg.role === "assistant" ? (
+                      <div className="prose prose-sm dark:prose-invert max-w-none">
+                        <ReactMarkdown>{msg.content}</ReactMarkdown>
+                      </div>
+                    ) : msg.content}
                   </div>
                 </div>
               ))}
-              {isLoading && (
+              {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
                 <div className="flex justify-start">
                   <div className="bg-muted rounded-xl px-4 py-3">
                     <div className="flex gap-1">
@@ -90,21 +160,20 @@ export default function AIInsights() {
                 onKeyDown={e => e.key === "Enter" && input.trim() && sendMessage(input)}
                 className="h-11"
               />
-              <Button size="icon" className="h-11 w-11 shrink-0" onClick={() => input.trim() && sendMessage(input)} disabled={isLoading}>
-                <Send className="h-4 w-4" />
+              <Button size="icon" className="h-11 w-11 shrink-0 gradient-primary" onClick={() => input.trim() && sendMessage(input)} disabled={isLoading}>
+                <Send className="h-4 w-4 text-primary-foreground" />
               </Button>
             </div>
           </SectionCard>
         </div>
 
-        {/* Suggestions */}
         <div className="space-y-3">
           <h3 className="text-sm font-semibold">Suggested Queries</h3>
           {SUGGESTED_QUERIES.map((q, i) => (
             <button
               key={i}
               onClick={() => sendMessage(q.text)}
-              className="w-full flex items-start gap-3 p-3 rounded-lg border border-border hover:border-primary/30 hover:bg-accent/50 transition-all text-left"
+              className="w-full flex items-start gap-3 p-3 rounded-lg border border-border hover:border-primary/30 hover:bg-accent/50 transition-all text-left glass-card-3d"
             >
               <q.icon className="h-4 w-4 text-primary mt-0.5 shrink-0" />
               <span className="text-sm">{q.text}</span>
