@@ -65,7 +65,7 @@ export default function POS() {
       toast.error("Controlled medicines require customer identification");
       return;
     }
-    toast({ title: "Sale completed!", description: `Total: ₦${total.toLocaleString()} — Receipt #${Date.now().toString(36).toUpperCase()}` });
+    toast.success(`Sale completed! Total: ₦${total.toLocaleString()} — Receipt #${Date.now().toString(36).toUpperCase()}`);
     setCart([]);
     setCustomerName("");
   };
