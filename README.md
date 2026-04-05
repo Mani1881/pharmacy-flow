@@ -1,11 +1,12 @@
 # PharmaFlow
 
 <p align="center">
-	<img src="<img width="1366" height="683" alt="image" src="https://github.com/user-attachments/assets/00826434-3d97-4d63-b1fb-cb30b44c597b" />
-" alt="PharmaFlow 3D operations dashboard visual" width="100%" />
+	<img width="1366" height="683" alt="PharmaFlow 3D operations dashboard visual" src="https://github.com/user-attachments/assets/00826434-3d97-4d63-b1fb-cb30b44c597b" />
 </p>
 
 PharmaFlow is a pharmacy chain management platform for tracking inventory, sales, replenishment orders, outlets, audit logs, reports, and AI-assisted operational insights.
+
+A pharmacy-themed background image is available at [`public/pharmaflow-bg.svg`](public/pharmaflow-bg.svg) for use in the application.
 
 The repository contains two parts:
 - A React + Vite frontend in the project root.
