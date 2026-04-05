@@ -62,7 +62,7 @@ export default function POS() {
 
   const handleCheckout = () => {
     if (hasControlled && !customerName.trim()) {
-      toast({ title: "Customer info required", description: "Controlled medicines require customer identification", variant: "destructive" });
+      toast.error("Controlled medicines require customer identification");
       return;
     }
     toast({ title: "Sale completed!", description: `Total: ₦${total.toLocaleString()} — Receipt #${Date.now().toString(36).toUpperCase()}` });
