@@ -43,7 +43,7 @@ export default function LoginPage() {
       if (error) throw error;
       toast.success("Account created! Please check your email to verify.");
     } catch (err: any) {
-      toast({ title: "Signup failed", description: err.message, variant: "destructive" });
+      toast.error("Signup failed: " + err.message);
     } finally {
       setLoading(false);
     }
