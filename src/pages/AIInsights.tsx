@@ -103,7 +103,7 @@ export default function AIInsights() {
         }
       }
     } catch (err: any) {
-      toast({ title: "AI Error", description: err.message, variant: "destructive" });
+      toast.error("AI Error: " + err.message);
     } finally {
       setIsLoading(false);
     }
