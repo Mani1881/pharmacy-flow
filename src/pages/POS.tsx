@@ -28,7 +28,7 @@ const CATALOG = [
 ];
 
 export default function POS() {
-  const { toast } = useToast();
+  
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [customerName, setCustomerName] = useState("");
