@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Search, Plus, Minus, Trash2, ShoppingCart, CreditCard, Receipt, Barcode } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface CartItem {
   id: string;
@@ -28,7 +28,7 @@ const CATALOG = [
 ];
 
 export default function POS() {
-  const { toast } = useToast();
+  
   const [search, setSearch] = useState("");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [customerName, setCustomerName] = useState("");
@@ -62,10 +62,10 @@ export default function POS() {
 
   const handleCheckout = () => {
     if (hasControlled && !customerName.trim()) {
-      toast({ title: "Customer info required", description: "Controlled medicines require customer identification", variant: "destructive" });
+      toast.error("Controlled medicines require customer identification");
       return;
     }
-    toast({ title: "Sale completed!", description: `Total: ₦${total.toLocaleString()} — Receipt #${Date.now().toString(36).toUpperCase()}` });
+    toast.success(`Sale completed! Total: ₦${total.toLocaleString()} — Receipt #${Date.now().toString(36).toUpperCase()}`);
     setCart([]);
     setCustomerName("");
   };

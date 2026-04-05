@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Brain, Send, Sparkles, TrendingUp, AlertTriangle, Package } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
@@ -26,7 +26,7 @@ export default function AIInsights() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const { toast } = useToast();
+  
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -63,12 +63,12 @@ export default function AIInsights() {
       });
 
       if (resp.status === 429) {
-        toast({ title: "Rate limited", description: "Too many requests. Please wait a moment.", variant: "destructive" });
+        toast.error("Too many requests. Please wait a moment.");
         setIsLoading(false);
         return;
       }
       if (resp.status === 402) {
-        toast({ title: "Credits exhausted", description: "Please add AI credits to continue.", variant: "destructive" });
+        toast.error("AI credits exhausted. Please add funds to continue.");
         setIsLoading(false);
         return;
       }
@@ -103,7 +103,7 @@ export default function AIInsights() {
         }
       }
     } catch (err: any) {
-      toast({ title: "AI Error", description: err.message, variant: "destructive" });
+      toast.error("AI Error: " + err.message);
     } finally {
       setIsLoading(false);
     }

@@ -6,11 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Shield, LogIn, UserPlus } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import pharmaLogo from "@/assets/pharmaflow-logo.png";
 
 export default function LoginPage() {
-  const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -23,7 +22,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
     } catch (err: any) {
-      toast({ title: "Login failed", description: err.message, variant: "destructive" });
+      toast.error("Login failed: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -42,9 +41,9 @@ export default function LoginPage() {
         },
       });
       if (error) throw error;
-      toast({ title: "Account created!", description: "Please check your email to verify your account." });
+      toast.success("Account created! Please check your email to verify.");
     } catch (err: any) {
-      toast({ title: "Signup failed", description: err.message, variant: "destructive" });
+      toast.error("Signup failed: " + err.message);
     } finally {
       setLoading(false);
     }
