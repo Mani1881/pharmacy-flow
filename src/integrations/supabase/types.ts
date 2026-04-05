@@ -14,16 +14,348 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      alerts: {
+        Row: {
+          created_at: string
+          id: string
+          is_read: boolean | null
+          message: string | null
+          outlet_id: string | null
+          resolved_at: string | null
+          severity: string | null
+          title: string
+          type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          message?: string | null
+          outlet_id?: string | null
+          resolved_at?: string | null
+          severity?: string | null
+          title: string
+          type: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_read?: boolean | null
+          message?: string | null
+          outlet_id?: string | null
+          resolved_at?: string | null
+          severity?: string | null
+          title?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "alerts_outlet_id_fkey"
+            columns: ["outlet_id"]
+            isOneToOne: false
+            referencedRelation: "outlets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      audit_log: {
+        Row: {
+          action: string
+          created_at: string
+          details: Json | null
+          entity_id: string | null
+          entity_type: string | null
+          id: string
+          ip_address: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          details?: Json | null
+          entity_id?: string | null
+          entity_type?: string | null
+          id?: string
+          ip_address?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      inventory: {
+        Row: {
+          created_at: string
+          id: string
+          last_restocked_at: string | null
+          outlet_id: string
+          product_id: string
+          quantity: number
+          reorder_level: number | null
+          reorder_quantity: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_restocked_at?: string | null
+          outlet_id: string
+          product_id: string
+          quantity?: number
+          reorder_level?: number | null
+          reorder_quantity?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_restocked_at?: string | null
+          outlet_id?: string
+          product_id?: string
+          quantity?: number
+          reorder_level?: number | null
+          reorder_quantity?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_outlet_id_fkey"
+            columns: ["outlet_id"]
+            isOneToOne: false
+            referencedRelation: "outlets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      outlets: {
+        Row: {
+          address: string | null
+          created_at: string
+          id: string
+          is_active: boolean | null
+          manager_name: string | null
+          name: string
+          phone: string | null
+          region: string | null
+          type: string | null
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          manager_name?: string | null
+          name: string
+          phone?: string | null
+          region?: string | null
+          type?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean | null
+          manager_name?: string | null
+          name?: string
+          phone?: string | null
+          region?: string | null
+          type?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          batch_number: string | null
+          category: string | null
+          cost_price: number
+          created_at: string
+          expiry_date: string | null
+          id: string
+          is_controlled: boolean | null
+          manufacturer: string | null
+          name: string
+          requires_prescription: boolean | null
+          sku: string
+          unit_price: number
+          updated_at: string
+        }
+        Insert: {
+          batch_number?: string | null
+          category?: string | null
+          cost_price?: number
+          created_at?: string
+          expiry_date?: string | null
+          id?: string
+          is_controlled?: boolean | null
+          manufacturer?: string | null
+          name: string
+          requires_prescription?: boolean | null
+          sku: string
+          unit_price?: number
+          updated_at?: string
+        }
+        Update: {
+          batch_number?: string | null
+          category?: string | null
+          cost_price?: number
+          created_at?: string
+          expiry_date?: string | null
+          id?: string
+          is_controlled?: boolean | null
+          manufacturer?: string | null
+          name?: string
+          requires_prescription?: boolean | null
+          sku?: string
+          unit_price?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          outlet_id: string | null
+          outlet_name: string | null
+          region_id: string | null
+          role: Database["public"]["Enums"]["app_role"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          outlet_id?: string | null
+          outlet_name?: string | null
+          region_id?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          outlet_id?: string | null
+          outlet_name?: string | null
+          region_id?: string | null
+          role?: Database["public"]["Enums"]["app_role"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      sales: {
+        Row: {
+          created_at: string
+          customer_name: string | null
+          id: string
+          items: Json
+          outlet_id: string | null
+          payment_method: string | null
+          receipt_number: string | null
+          subtotal: number
+          total: number
+          user_id: string | null
+          vat: number
+        }
+        Insert: {
+          created_at?: string
+          customer_name?: string | null
+          id?: string
+          items?: Json
+          outlet_id?: string | null
+          payment_method?: string | null
+          receipt_number?: string | null
+          subtotal?: number
+          total?: number
+          user_id?: string | null
+          vat?: number
+        }
+        Update: {
+          created_at?: string
+          customer_name?: string | null
+          id?: string
+          items?: Json
+          outlet_id?: string | null
+          payment_method?: string | null
+          receipt_number?: string | null
+          subtotal?: number
+          total?: number
+          user_id?: string | null
+          vat?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_outlet_id_fkey"
+            columns: ["outlet_id"]
+            isOneToOne: false
+            referencedRelation: "outlets"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role:
+        | "super_admin"
+        | "regional_supervisor"
+        | "pharmacist"
+        | "store_assistant"
+        | "finance_user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +482,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: [
+        "super_admin",
+        "regional_supervisor",
+        "pharmacist",
+        "store_assistant",
+        "finance_user",
+      ],
+    },
   },
 } as const
