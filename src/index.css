@@ -1,8 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @layer base {
   :root {
@@ -148,5 +148,46 @@
       radial-gradient(circle at 20% 50%, hsl(217 91% 55% / 0.08) 0%, transparent 50%),
       radial-gradient(circle at 80% 20%, hsl(199 89% 48% / 0.06) 0%, transparent 50%),
       radial-gradient(circle at 40% 80%, hsl(260 80% 60% / 0.05) 0%, transparent 50%);
+  }
+
+  .dashboard-scene {
+    background:
+      radial-gradient(1200px 420px at 10% -20%, hsl(168 70% 50% / 0.18), transparent 55%),
+      radial-gradient(1000px 360px at 95% 0%, hsl(217 91% 60% / 0.18), transparent 52%),
+      linear-gradient(180deg, hsl(var(--background)), hsl(var(--background)));
+  }
+
+  .holo-panel {
+    background:
+      linear-gradient(150deg, hsl(0 0% 100% / 0.72), hsl(0 0% 100% / 0.35)),
+      linear-gradient(115deg, hsl(168 70% 45% / 0.14), hsl(217 91% 60% / 0.1));
+    border: 1px solid hsl(var(--border) / 0.55);
+    box-shadow:
+      0 22px 30px -22px hsl(215 25% 10% / 0.45),
+      inset 0 1px 0 hsl(0 0% 100% / 0.55);
+    backdrop-filter: blur(14px);
+  }
+
+  .tilt-surface {
+    transform-style: preserve-3d;
+    transform: perspective(1200px) rotateX(4deg) rotateY(-4deg);
+    transition: transform 220ms ease, box-shadow 220ms ease;
+  }
+
+  .tilt-surface:hover {
+    transform: perspective(1200px) rotateX(0deg) rotateY(0deg) translateY(-2px);
+  }
+
+  .chart-plate {
+    @apply rounded-xl border border-border/60;
+    background:
+      linear-gradient(180deg, hsl(0 0% 100% / 0.8), hsl(0 0% 100% / 0.48));
+    box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.7);
+  }
+
+  .kpi-glow {
+    box-shadow:
+      0 16px 25px -20px hsl(168 70% 40% / 0.85),
+      0 1px 0 hsl(0 0% 100% / 0.5) inset;
   }
 }

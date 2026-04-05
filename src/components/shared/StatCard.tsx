@@ -14,7 +14,7 @@ interface StatCardProps {
 
 export function StatCard({ title, value, change, changeType = "neutral", icon: Icon, iconColor, subtitle }: StatCardProps) {
   return (
-    <div className="glass-card stat-card-hover rounded-xl p-5">
+    <div className="holo-panel stat-card-hover kpi-glow rounded-2xl p-5">
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <p className="text-sm text-muted-foreground">{title}</p>
@@ -52,7 +52,7 @@ export function PageHeader({ title, description, children }: { title: string; de
 
 export function SectionCard({ title, children, className, action }: { title?: string; children: ReactNode; className?: string; action?: ReactNode }) {
   return (
-    <div className={cn("glass-card rounded-xl", className)}>
+    <div className={cn("holo-panel rounded-2xl", className)}>
       {title && (
         <div className="flex items-center justify-between px-5 py-4 border-b border-border/50">
           <h3 className="font-semibold text-sm">{title}</h3>

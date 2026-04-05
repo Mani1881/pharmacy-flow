@@ -1,3 +1,4 @@
+import { useToast } from "@/hooks/use-toast";
 import { PageHeader, SectionCard, StatCard } from "@/components/shared/StatCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,46 @@ const outletPerformance = [
 ];
 
 export default function Reports() {
+  const { toast } = useToast();
+
+  const handleExport = () => {
+    const header = ["dataset", "period", "metric", "value"];
+
+    const salesRows = monthlySales.flatMap((row) => [
+      ["monthlySales", row.month, "revenue", row.revenue],
+      ["monthlySales", row.month, "cost", row.cost],
+      ["monthlySales", row.month, "margin", row.margin],
+    ]);
+
+    const wastageRows = wastageData.flatMap((row) => [
+      ["wastage", row.month, "expired", row.expired],
+      ["wastage", row.month, "damaged", row.damaged],
+      ["wastage", row.month, "returned", row.returned],
+    ]);
+
+    const outletRows = outletPerformance.flatMap((row) => [
+      ["outletPerformance", row.name, "revenue", row.revenue],
+      ["outletPerformance", row.name, "target", row.target],
+      ["outletPerformance", row.name, "score", row.score],
+    ]);
+
+    const csv = [header, ...salesRows, ...wastageRows, ...outletRows]
+      .map((row) => row.map((value) => `"${String(value).replaceAll('"', '""')}"`).join(","))
+      .join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `reports-export-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+
+    toast({ title: "Export complete", description: "Reports CSV downloaded." });
+  };
+
   return (
     <div className="space-y-6 animate-fade-in">
       <PageHeader title="BI Reports" description="Sales, margin, wastage, and outlet performance analytics">
@@ -48,7 +89,7 @@ export default function Reports() {
             <SelectItem value="ytd">Year to date</SelectItem>
           </SelectContent>
         </Select>
-        <Button variant="outline" size="sm"><Download className="h-4 w-4 mr-1" />Export</Button>
+        <Button variant="outline" size="sm" onClick={handleExport}><Download className="h-4 w-4 mr-1" />Export</Button>
       </PageHeader>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

@@ -1,0 +1,99 @@
+<svg width="1600" height="720" viewBox="0 0 1600 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="720" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#032A5A"/>
+      <stop offset="0.55" stop-color="#0A4D9D"/>
+      <stop offset="1" stop-color="#14A3C7"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1200 120) rotate(140) scale(520 320)">
+      <stop stop-color="#8BE8FF" stop-opacity="0.65"/>
+      <stop offset="1" stop-color="#8BE8FF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowB" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(320 620) rotate(-10) scale(480 250)">
+      <stop stop-color="#5CE7D3" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#5CE7D3" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.08"/>
+    </linearGradient>
+    <linearGradient id="pill" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7CE6FF"/>
+      <stop offset="1" stop-color="#31A3FF"/>
+    </linearGradient>
+    <filter id="blur20" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="20"/>
+    </filter>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="22" stdDeviation="20" flood-color="#001B3B" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="720" fill="url(#bg)"/>
+  <rect width="1600" height="720" fill="url(#glowA)"/>
+  <rect width="1600" height="720" fill="url(#glowB)"/>
+
+  <g opacity="0.15">
+    <path d="M60 610C250 470 520 420 760 460C1040 507 1280 655 1540 560" stroke="#D8F7FF" stroke-width="2"/>
+    <path d="M0 560C220 420 470 390 720 430C940 467 1190 570 1600 500" stroke="#C3F0FF" stroke-width="1.5"/>
+    <path d="M30 660C260 560 530 520 790 550C1040 579 1300 685 1560 630" stroke="#E5FBFF" stroke-width="1.5"/>
+  </g>
+
+  <g filter="url(#softShadow)">
+    <rect x="220" y="150" width="1160" height="420" rx="34" fill="url(#glass)" stroke="#B9F4FF" stroke-opacity="0.45"/>
+  </g>
+
+  <g opacity="0.95">
+    <rect x="280" y="220" width="290" height="170" rx="24" fill="#DDF9FF" fill-opacity="0.1" stroke="#B5EDFF" stroke-opacity="0.7"/>
+    <rect x="620" y="220" width="300" height="170" rx="24" fill="#DDF9FF" fill-opacity="0.1" stroke="#B5EDFF" stroke-opacity="0.7"/>
+    <rect x="970" y="220" width="350" height="170" rx="24" fill="#DDF9FF" fill-opacity="0.1" stroke="#B5EDFF" stroke-opacity="0.7"/>
+  </g>
+
+  <g>
+    <rect x="290" y="230" width="120" height="14" rx="7" fill="#B4EBFF" fill-opacity="0.55"/>
+    <rect x="290" y="256" width="230" height="84" rx="14" fill="#FFFFFF" fill-opacity="0.1"/>
+    <rect x="290" y="352" width="190" height="10" rx="5" fill="#B4EBFF" fill-opacity="0.4"/>
+
+    <rect x="632" y="230" width="140" height="14" rx="7" fill="#B4EBFF" fill-opacity="0.55"/>
+    <rect x="632" y="256" width="274" height="84" rx="14" fill="#FFFFFF" fill-opacity="0.1"/>
+    <rect x="632" y="352" width="210" height="10" rx="5" fill="#B4EBFF" fill-opacity="0.4"/>
+
+    <rect x="982" y="230" width="170" height="14" rx="7" fill="#B4EBFF" fill-opacity="0.55"/>
+    <rect x="982" y="256" width="326" height="84" rx="14" fill="#FFFFFF" fill-opacity="0.1"/>
+    <rect x="982" y="352" width="250" height="10" rx="5" fill="#B4EBFF" fill-opacity="0.4"/>
+  </g>
+
+  <g transform="translate(970 438)" filter="url(#softShadow)">
+    <rect x="0" y="0" width="352" height="94" rx="20" fill="#E1F9FF" fill-opacity="0.12" stroke="#B6EFFF" stroke-opacity="0.6"/>
+    <rect x="24" y="28" width="160" height="10" rx="5" fill="#C7F3FF" fill-opacity="0.65"/>
+    <rect x="24" y="48" width="220" height="10" rx="5" fill="#C7F3FF" fill-opacity="0.45"/>
+    <rect x="276" y="28" width="52" height="38" rx="10" fill="#3FBDFF"/>
+  </g>
+
+  <g transform="translate(268 430)" filter="url(#softShadow)">
+    <rect x="0" y="0" width="640" height="112" rx="20" fill="#E1F9FF" fill-opacity="0.12" stroke="#B6EFFF" stroke-opacity="0.6"/>
+    <path d="M40 74L140 56L220 62L300 36L380 50L460 44L560 28" stroke="#7FE2FF" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="300" cy="36" r="8" fill="#BAF5FF"/>
+    <circle cx="560" cy="28" r="8" fill="#BAF5FF"/>
+  </g>
+
+  <g transform="translate(130 70) rotate(-14)">
+    <rect x="0" y="0" width="180" height="64" rx="32" fill="url(#pill)"/>
+    <rect x="90" y="0" width="90" height="64" rx="32" fill="#BDF3FF" fill-opacity="0.65"/>
+  </g>
+
+  <g transform="translate(1330 546) rotate(16)">
+    <rect x="0" y="0" width="170" height="58" rx="29" fill="url(#pill)"/>
+    <rect x="0" y="0" width="85" height="58" rx="29" fill="#BDF3FF" fill-opacity="0.65"/>
+  </g>
+
+  <g transform="translate(1260 84)" opacity="0.65" filter="url(#blur20)">
+    <circle cx="0" cy="0" r="34" fill="#CCF8FF"/>
+    <circle cx="92" cy="38" r="18" fill="#A7EBFF"/>
+  </g>
+
+  <g transform="translate(120 108)">
+    <text x="0" y="0" fill="#E9FCFF" font-family="Segoe UI, Arial, sans-serif" font-size="62" font-weight="700">PharmaFlow</text>
+    <text x="0" y="44" fill="#D4F8FF" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="500">3D Operations Dashboard for Pharmacy Chain Management</text>
+  </g>
+</svg>
