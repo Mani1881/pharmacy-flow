@@ -22,7 +22,7 @@ export default function LoginPage() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
     } catch (err: any) {
-      toast({ title: "Login failed", description: err.message, variant: "destructive" });
+      toast.error("Login failed: " + err.message);
     } finally {
       setLoading(false);
     }
