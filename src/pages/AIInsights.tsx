@@ -63,7 +63,7 @@ export default function AIInsights() {
       });
 
       if (resp.status === 429) {
-        toast({ title: "Rate limited", description: "Too many requests. Please wait a moment.", variant: "destructive" });
+        toast.error("Too many requests. Please wait a moment.");
         setIsLoading(false);
         return;
       }
